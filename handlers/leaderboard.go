@@ -40,3 +40,7 @@ func Test(c *gin.Context){
 		"message": result,
 	})
 }
+
+func TestDatabaseConnection(c *gin.Context){
+	
+}
