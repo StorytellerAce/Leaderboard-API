@@ -5,17 +5,32 @@ import (
 	"leaderboard-api/repository"
 )
 
-func SubmitScore(score models.Score) {
+type LeaderboardService struct {
+	repo *repository.LeaderboardRepository
+}
+
+func NewLeaderboardService(repository *repository.LeaderboardRepository) *LeaderboardService {
+	return &LeaderboardService{
+		repo: repository,
+	}
+}
+
+func (s *LeaderboardService) SubmitScore(score models.Score) {
 	if (score.Player == "" || score.Score <= 0) {
 		return
 	}
-	repository.Save(score)
+	s.repo.Save(score)
 }
 
-func GetScores() []models.Score {
-	return repository.GetAll()
+func (s *LeaderboardService) GetScores() []models.Score {
+	scores, err := s.repo.GetAll()
+	if err != nil {
+		return nil
+	}
+	return scores
 }
 
-func Test() string {
+func (s *LeaderboardService) Test() string {
+	s.repo.Test()
 	return "Hello World"
 }

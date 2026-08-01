@@ -1,6 +1,7 @@
 package models
 
 type Score struct {
-	Player string `json:"player"`
-	Score  int    `json:"score"`
+	ID		int    `json:"id"`
+	Player	string `json:"player"`
+	Score	int    `json:"score"`
 }

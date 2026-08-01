@@ -6,7 +6,17 @@ import (
 	"leaderboard-api/services"
 )
 
-func SubmitScore(c *gin.Context){
+type LeaderboardHandler struct {
+	serv *services.LeaderboardService
+}
+
+func NewLeaderboardHandler(service *services.LeaderboardService) *LeaderboardHandler {
+	return &LeaderboardHandler{
+		serv: service,
+	}
+}
+
+func (h *LeaderboardHandler) SubmitScore(c *gin.Context){
 	var score models.Score
 
 	// bind the json to the score object, and return directly if there is an error
@@ -19,28 +29,32 @@ func SubmitScore(c *gin.Context){
 		return
 	}
 
-	services.SubmitScore(score)
+	h.serv.SubmitScore(score)
 
 	c.JSON(200, gin.H{
 		"message": "Score submitted successfully",
 	})
 }
 
-func GetLeaderboard(c *gin.Context){
-	data := services.GetScores()
+func (h *LeaderboardHandler) GetLeaderboard(c *gin.Context){
+	data := h.serv.GetScores()
 	c.JSON(200, gin.H{
 		"message": "Leaderboard retrieved successfully",
 		"data": data,
 	})
 }
 
-func Test(c *gin.Context){
-	result := services.Test()
+func (h *LeaderboardHandler) Test(c *gin.Context){
+	result := h.serv.Test()
 	c.JSON(200, gin.H{
 		"message": result,
 	})
 }
 
-func TestDatabaseConnection(c *gin.Context){
-	
+func (h *LeaderboardHandler) GetAll(c *gin.Context){
+	data := h.serv.GetScores()
+	c.JSON(200, gin.H{
+		"message": "All scores retrieved successfully",
+		"data": data,
+	})
 }
