@@ -21,8 +21,15 @@ func NewLeaderboardRepository(
 }
 
 func (r *LeaderboardRepository) Save(score models.Score){
-	var scores []models.Score
-	scores = append(scores, score)
+	_, err := r.db.Exec(
+		context.Background(),
+		"INSERT INTO scores (player, score) VALUES ($1, $2)",
+		score.Player,
+		score.Score,
+	)
+	if err != nil {
+		slog.Error("Error saving score", "error", err)
+	}
 }
 
 func (r *LeaderboardRepository) GetAll() ([]models.Score, error) {
